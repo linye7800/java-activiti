@@ -31,6 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
-activiti.cfg.xml
 log/
 time-based-logs/
+activiti.cfg.xml

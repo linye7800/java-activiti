@@ -1,12 +1,13 @@
 package com.lincoln.test;
 
-import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.ProcessEngines;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
+import org.activiti.engine.*;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Task;
+import org.activiti.engine.task.TaskQuery;
 import org.junit.Test;
+
+import java.util.List;
 
 /**
  * @Author Lincoln Lin
@@ -79,6 +80,84 @@ public class ActivitiDemo {
         System.out.println("流程定义ID： " + processInstance.getProcessDefinitionId());
         System.out.println("流程实例ID： " + processInstance.getId());
         System.out.println("当前活动ID： " + processInstance.getActivityId());
+    }
+
+    /**
+     * 查询个人待处理的任务
+     *
+     * 1. 获取流程引擎
+     * 2. 获取task service
+     * 3. 根据流程key 和 任务的负责人 查询任务
+     * 4. 输出
+     */
+    @Test
+    public void testQueryPersonTaskList(){
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        TaskService taskService = processEngine.getTaskService();
+        List<Task> taskList = taskService.createTaskQuery()
+                .processDefinitionKey("businessTrip") // 流程的key
+                .taskAssignee("Lincoln") // 要查询的流程的分配人
+                .list();
+        taskList.stream().forEach(
+            task -> {
+                System.out.println("流程实例Id=" + task.getProcessInstanceId());
+                System.out.println("任务Id=" + task.getId());
+                System.out.println("任务负责人=" + task.getAssignee());
+                System.out.println("任务名称=" + task.getName());
+                System.out.println("--------------------------------------");
+            }
+        );
+    }
+
+    /**
+     * 完成个人任务
+     * 1. 创建流程引擎
+     * 2. 获取service
+     * 3. 查询任务
+     * 3. 根据任务id完成任务
+     */
+    @Test
+    public void completeTask(){
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        TaskService taskService = processEngine.getTaskService();
+
+        // step1: 获取Lincoln -> businessTrip 完成Lincoln的对应的任务
+//        Task task = taskService.createTaskQuery()
+//                .processDefinitionKey("businessTrip") // 流程的key
+//                .taskAssignee("Lincoln") // 要查询的流程的分配人
+//                .singleResult();
+
+        // step2:  获取Tim -> businessTrip  完成Tim的对应的任务
+//        Task task = taskService.createTaskQuery()
+//                .processDefinitionKey("businessTrip") // 流程的key
+//                .taskAssignee("Tim") // 要查询的流程的分配人
+//                .singleResult();
+
+        // step3:  获取Yuhang -> businessTrip  完成Yuhang的对应的任务
+//        Task task = taskService.createTaskQuery()
+//                .processDefinitionKey("businessTrip") // 流程的key
+//                .taskAssignee("Yuhang") // 要查询的流程的分配人
+//                .singleResult();
+
+        // step4:  获取David -> businessTrip  完成David的对应的任务
+//        Task task = taskService.createTaskQuery()
+//                .processDefinitionKey("businessTrip") // 流程的key
+//                .taskAssignee("David") // 要查询的流程的分配人
+//                .singleResult();
+
+        // step5:  获取yuki -> businessTrip  完成yuki的对应的任务
+        Task task = taskService.createTaskQuery()
+                .processDefinitionKey("businessTrip") // 流程的key
+                .taskAssignee("yuki") // 要查询的流程的分配人
+                .singleResult();
+
+        System.out.println("流程实例Id=" + task.getProcessInstanceId());
+        System.out.println("任务Id=" + task.getId());
+        System.out.println("任务负责人=" + task.getAssignee());
+        System.out.println("任务名称=" + task.getName());
+        System.out.println("--------------------------------------");
+        // 完成Tim的任务
+        taskService.complete(task.getId());
     }
 
 }

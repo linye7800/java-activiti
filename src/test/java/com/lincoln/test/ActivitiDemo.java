@@ -2,6 +2,8 @@ package com.lincoln.test;
 
 import org.activiti.engine.*;
 import org.activiti.engine.repository.Deployment;
+import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
@@ -158,6 +160,37 @@ public class ActivitiDemo {
         System.out.println("--------------------------------------");
         // 完成Tim的任务
         taskService.complete(task.getId());
+    }
+
+    /**
+     * 查询流程定义
+     * 1. 获取引擎
+     * 2. 获取repositoryService
+     * 3. 获取ProcessDefinitionQuery
+     * 4. 查询当前所有流程定义
+     *     processDefinitionKey 根据流程定义的key，查询所有的集合
+     *     orderByProcessDefinitionVersion 根据数据库表act_re_procdef表中的version字段进行排序
+     *     desc倒序排序
+     *     list返回list，查出相关所有内容
+     * 5. 输出信息
+     */
+    @Test
+    public void queryProcessDefinition() {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        RepositoryService repositoryService = processEngine.getRepositoryService();
+        ProcessDefinitionQuery definitionQuery = repositoryService.createProcessDefinitionQuery();
+        List<ProcessDefinition> processDefinitions = definitionQuery.processDefinitionKey("businessTrip")
+                .orderByProcessDefinitionVersion()
+                .desc()
+                .list();
+        processDefinitions.stream().forEach( p -> {
+            System.out.println("流程定义Id=" + p.getId());
+            System.out.println("流程定义名称=" + p.getName());
+            System.out.println("流程定义的key=" + p.getKey());
+            System.out.println("流程定义的version=" + p.getVersion());
+            System.out.println("--------------------------------------");
+        } );
+
     }
 
 }

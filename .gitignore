@@ -33,4 +33,5 @@ build/
 .vscode/
 log/
 time-based-logs/
-activiti.cfg.xml
+
+srcactiviti.cfg.xml

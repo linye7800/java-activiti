@@ -218,4 +218,35 @@ public class ActivitiDemo {
         repositoryService.deleteDeployment(deployId, true);
     }
 
+    /**
+     * 下载 流程资源文件：
+     * 方案一： 使用Activiti提供的api，来下载资源
+     * 方案二： 自己撸一段代码从DB里面下载
+     *
+     * 方案一：
+     * 1. 得到引擎
+     * 2. 获取api， repositoryService
+     * 3. 获取查询对象 ProcessDefinitionQuery，查询流程定义信息
+     * 4. 通过流程定义信息，获取部署ID
+     * 5. 通过RepositoryService，传递部署Id参数，读取资源信息（png和bpmn）
+     *    5.1 获取png图片
+     *    5.2 获取bpmn的流
+     * 6. 构造OutputStream流
+     * 7. 输入流，输出流的转换
+     * 8. 关闭流
+     */
+    @Test
+    public void downloadProcessRepository() {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        RepositoryService repositoryService = processEngine.getRepositoryService();
+        ProcessDefinitionQuery processDefinitionQuery = repositoryService.createProcessDefinitionQuery();
+        List<ProcessDefinition> processDefinitions = processDefinitionQuery.processDefinitionKey("processDefinitionQuery")
+                .orderByProcessDefinitionVersion()
+                .desc()
+                .list();
+
+    }
+
+
+
 }

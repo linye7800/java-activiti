@@ -130,3 +130,16 @@
                     .taskAssignee("yuki") // 要查询的流程的分配人
                     .singleResult();
     ```
+
+8. **流程部署查询**
+
+   使用RepositoryService来完成，用任务id来完成任务
+    ```java
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        RepositoryService repositoryService = processEngine.getRepositoryService();
+        ProcessDefinitionQuery definitionQuery = repositoryService.createProcessDefinitionQuery();
+        List<ProcessDefinition> processDefinitions = definitionQuery.processDefinitionKey("businessTrip")
+                .orderByProcessDefinitionVersion()
+                .desc()
+                .list();
+    ```

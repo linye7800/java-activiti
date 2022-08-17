@@ -188,9 +188,34 @@ public class ActivitiDemo {
             System.out.println("流程定义名称=" + p.getName());
             System.out.println("流程定义的key=" + p.getKey());
             System.out.println("流程定义的version=" + p.getVersion());
+            System.out.println("流程部署id=" + p.getDeploymentId());
             System.out.println("--------------------------------------");
         } );
+    }
 
+    /**
+     * 删除流程部署信息
+     * 1. 获取引擎
+     * 2. 获取repositoryService
+     * 3. 通过部署Id删除流程部署信息
+     *
+     * 删除流程操作的表和创建流程的表是一样的：
+     * act_ge_bytearray
+     * act_re_deployment
+     * act_re_procdef
+     * 该流程的历史流程任务信息表里面的内容不会被删除，当成历史保留了
+     *
+     * 如果删除还拥有没有完成的流程任务，该流程不会被删除成功。
+     * 如果有强制任务，必须得删除，就得采取别的特殊方式，原理级联删除，先删除外键的表，再删除主键的
+     */
+    @Test
+    public void deleteProcessDeployment() {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        RepositoryService repositoryService = processEngine.getRepositoryService();
+        String deployId = "1";
+//        repositoryService.deleteDeployment(deployId);
+        // true执行级联删除
+        repositoryService.deleteDeployment(deployId, true);
     }
 
 }
